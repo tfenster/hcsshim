@@ -144,7 +144,9 @@ func TestAddLoadBalancer(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	loadBalancer, err := AddLoadBalancer([]HostComputeEndpoint{*endpoint}, false, false, "10.0.0.1", []string{"1.1.1.2", "1.1.1.3"}, 6, 8080, 80)
+	// Revert breaking change to AddLoadBalancer API. @madhanrm to resolve.
+	//loadBalancer, err := AddLoadBalancer([]HostComputeEndpoint{*endpoint}, false, false, "10.0.0.1", []string{"1.1.1.2", "1.1.1.3"}, 6, 8080, 80)
+	loadBalancer, err := AddLoadBalancer([]HostComputeEndpoint{*endpoint}, false, "10.0.0.1", []string{"1.1.1.2", "1.1.1.3"}, 6, 8080, 80)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -170,74 +172,76 @@ func TestAddLoadBalancer(t *testing.T) {
 	}
 }
 
-func TestAddDSRLoadBalancer(t *testing.T) {
-	network, err := CreateTestOverlayNetwork()
-	if err != nil {
-		t.Fatal(err)
-	}
-	endpoint, err := HcnCreateTestEndpoint(network)
-	if err != nil {
-		t.Fatal(err)
-	}
+// These break API compatibility due to a change in AddLoadBalancer.
+// commenting out for now. @madhanrm to resolve.
+//func TestAddDSRLoadBalancer(t *testing.T) {
+//	network, err := CreateTestOverlayNetwork()
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//	endpoint, err := HcnCreateTestEndpoint(network)
+//	if err != nil {
+//		t.Fatal(err)
+//	}
 
-	loadBalancer, err := AddLoadBalancer([]HostComputeEndpoint{*endpoint}, false, true, "10.0.0.1", []string{"1.1.1.2", "1.1.1.3"}, 6, 8080, 80)
-	if err != nil {
-		t.Fatal(err)
-	}
-	foundLB, err := GetLoadBalancerByID(loadBalancer.Id)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if foundLB == nil {
-		t.Fatal(fmt.Errorf("No loadBalancer found"))
-	}
+//	loadBalancer, err := AddLoadBalancer([]HostComputeEndpoint{*endpoint}, false, true, "10.0.0.1", []string{"1.1.1.2", "1.1.1.3"}, 6, 8080, 80)
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//	foundLB, err := GetLoadBalancerByID(loadBalancer.Id)
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//	if foundLB == nil {
+//		t.Fatal(fmt.Errorf("No loadBalancer found"))
+//	}
 
-	_, err = loadBalancer.Delete()
-	if err != nil {
-		t.Fatal(err)
-	}
-	_, err = endpoint.Delete()
-	if err != nil {
-		t.Fatal(err)
-	}
-	_, err = network.Delete()
-	if err != nil {
-		t.Fatal(err)
-	}
-}
+//	_, err = loadBalancer.Delete()
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//	_, err = endpoint.Delete()
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//	_, err = network.Delete()
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//}
 
-func TestAddILBLoadBalancer(t *testing.T) {
-	network, err := CreateTestOverlayNetwork()
-	if err != nil {
-		t.Fatal(err)
-	}
-	endpoint, err := HcnCreateTestEndpoint(network)
-	if err != nil {
-		t.Fatal(err)
-	}
+//func TestAddILBLoadBalancer(t *testing.T) {
+//	network, err := CreateTestOverlayNetwork()
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//	endpoint, err := HcnCreateTestEndpoint(network)
+//	if err != nil {
+//		t.Fatal(err)
+//	}
 
-	loadBalancer, err := AddLoadBalancer([]HostComputeEndpoint{*endpoint}, true, false, "10.0.0.1", []string{"1.1.1.2", "1.1.1.3"}, 6, 8080, 80)
-	if err != nil {
-		t.Fatal(err)
-	}
-	foundLB, err := GetLoadBalancerByID(loadBalancer.Id)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if foundLB == nil {
-		t.Fatal(fmt.Errorf("No loadBalancer found"))
-	}
+//	loadBalancer, err := AddLoadBalancer([]HostComputeEndpoint{*endpoint}, true, false, "10.0.0.1", []string{"1.1.1.2", "1.1.1.3"}, 6, 8080, 80)
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//	foundLB, err := GetLoadBalancerByID(loadBalancer.Id)
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//	if foundLB == nil {
+//		t.Fatal(fmt.Errorf("No loadBalancer found"))
+//	}
 
-	_, err = loadBalancer.Delete()
-	if err != nil {
-		t.Fatal(err)
-	}
-	_, err = endpoint.Delete()
-	if err != nil {
-		t.Fatal(err)
-	}
-	_, err = network.Delete()
-	if err != nil {
-		t.Fatal(err)
-	}
-}
+//	_, err = loadBalancer.Delete()
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//	_, err = endpoint.Delete()
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//	_, err = network.Delete()
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//}

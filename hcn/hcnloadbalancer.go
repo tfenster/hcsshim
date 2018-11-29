@@ -280,7 +280,9 @@ func (loadBalancer *HostComputeLoadBalancer) RemoveEndpoint(endpoint *HostComput
 }
 
 // AddLoadBalancer for the specified endpoints
-func AddLoadBalancer(endpoints []HostComputeEndpoint, isILB bool, isDSR bool, sourceVIP string, frontendVIPs []string, protocol uint16, internalPort uint16, externalPort uint16) (*HostComputeLoadBalancer, error) {
+// This breaks API compatibility. Commenting out original change for now. @madhanrm to resolve.
+//func AddLoadBalancer(endpoints []HostComputeEndpoint, isILB bool, isDSR bool, sourceVIP string, frontendVIPs []string, protocol uint16, internalPort uint16, externalPort uint16) (*HostComputeLoadBalancer, error) {
+func AddLoadBalancer(endpoints []HostComputeEndpoint, isILB bool, sourceVIP string, frontendVIPs []string, protocol uint16, internalPort uint16, externalPort uint16) (*HostComputeLoadBalancer, error) {
 	logrus.Debugf("hcn::HostComputeLoadBalancer::AddLoadBalancer endpointId=%v, isILB=%v, sourceVIP=%s, frontendVIPs=%v, protocol=%v, internalPort=%v, externalPort=%v", endpoints, isILB, sourceVIP, frontendVIPs, protocol, internalPort, externalPort)
 
 	var portMappingFlags uint32
@@ -289,11 +291,12 @@ func AddLoadBalancer(endpoints []HostComputeEndpoint, isILB bool, isDSR bool, so
 		portMappingFlags = 1
 	}
 
-	var lbFlags uint32
-	lbFlags = 0
-	if isDSR {
-		lbFlags = 1 // EnableDirectServerReturn
-	}
+	// See comment in function header
+	//	var lbFlags uint32
+	//	lbFlags = 0
+	//	if isDSR {
+	//		lbFlags = 1 // EnableDirectServerReturn
+	//	}
 
 	loadBalancer := &HostComputeLoadBalancer{
 		SourceVIP: sourceVIP,
@@ -310,7 +313,8 @@ func AddLoadBalancer(endpoints []HostComputeEndpoint, isILB bool, isDSR bool, so
 			Major: 2,
 			Minor: 0,
 		},
-		Flags: lbFlags,
+		// See comment in function header
+		// Flags: lbFlags,
 	}
 
 	for _, endpoint := range endpoints {
